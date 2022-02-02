@@ -35,7 +35,7 @@
 
     .album-container {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         flex-wrap: wrap;
 
         .album {

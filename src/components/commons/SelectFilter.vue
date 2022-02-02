@@ -1,9 +1,9 @@
 <template>
     
     <div class="filter-search">
-        <select name="keyData" id="keyData" v-model="value" @change="$emit('changed', [keyData => value] )">
-            <option value='default' selected>All</option>
-            <option v-for="(item, index) in optionsArr" :value="index" :key="index">{{item}}</option>
+        <select name="keyData" id="keyData" v-model="value" @change="$emit('changed', {type:keyData, value:value} )">
+            <option value='' selected>All</option>
+            <option v-for="(item, index) in optionsArr" :value="item" :key="index">{{item}}</option>
         </select>
     </div>
 

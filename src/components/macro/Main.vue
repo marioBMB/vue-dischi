@@ -37,7 +37,10 @@
                 apiURL: "https://flynn.boolean.careers/exercises/api/array/music",
                 loading: true,
                 albums: [],
-                selectedFilters: [],
+                selectedFilters: {
+                    genre:'',
+                    author:''
+                },
                 filteredAlbums: [],
             }
         },
@@ -45,14 +48,18 @@
 
             updateFilters(payload) {
 
-                // se non esistono, aggiungi chiavi e valori all'array delle chiavi scelte
-                this.selectedFilters[payload[0]] = payload[1];
+                if (Object.prototype.hasOwnProperty.call(this.selectedFilters, payload.type )){
+                    
+                    this.selectedFilters[ payload.type ] = payload.value;
+                    console.log("selectedFilters", this.selectedFilters);
+                }
             },
             getAlbumsData(){
                 axios
                     .get(this.apiURL)
                     .then((success) => {
                         this.albums = success.data.response;
+                        this.filteredAlbums = this.albums;
                         this.loading = false;
                     })
                     .catch((error) => {
@@ -61,22 +68,26 @@
             },
             filterData(){
 
-                this.filteredAlbums = this.albums.filter((obj) => {
-
-                    return this.selectedFilters[0].every(() => this.selectedFilters[1].includes(obj.key));
+                let filtered = this.albums;
+                Object.keys(this.selectedFilters).forEach((key) => {
+                    filtered = this.filterArray( filtered, key );
                 });
+
+                this.filteredAlbums = filtered;
             },
+            filterArray( array, field ){
+
+                if( this.selectedFilters[field] == "") return array;
+                
+                return array.filter( (elem) =>  {
+                    return elem[field] == this.selectedFilters[field];
+                });
+            }
         },
         created(){
             this.getAlbumsData();
         },
         computed: {
-
-            /* albumFiltratiGenere(){
-                return this.albumsData.filter((album) => {
-                    return album.genre.toLowerCase() == this.genre.toLowerCase() // | this.genre == ""
-                });
-            }, */
         }
     }
 </script>
